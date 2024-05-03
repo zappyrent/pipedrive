@@ -92,11 +92,11 @@ SELECT * FROM deals_cte;
 
 DROP VIEW leads_deals_person;
 
-select cancelled_reason,
-       mkt_acquisition_term,
-       add_time
+select mkt_acquisition_term,
+       count(*)
 from leads
-where  mkt_acquisition_channel = 'cpc' and leads.cancelled_reason <> '' AND add_time >= '2024-04-01'
+where  /*mkt_acquisition_channel = 'cpc' AND*/ add_time>= '2024-04-01'
+group by mkt_acquisition_term;
 
 SELECT column_name, data_type
 FROM information_schema.columns
