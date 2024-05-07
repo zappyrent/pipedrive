@@ -41,7 +41,7 @@ WITH leads_cte AS (
                 else cast(cancelled_reason as decimal(10,0))
                 END as CHAR) as cancelled_reason
     FROM leads leads
-    LEFT JOIN person person ON cast(person_id as decimal(10,0)) = person.id
+        LEFT JOIN person person ON cast(person_id as decimal(10,0)) = person.id
 ),
 deals_cte AS (
     SELECT deals.person_id,
@@ -84,7 +84,7 @@ deals_cte AS (
                 else cast(cancelled_reason as decimal(10,0))
                 END as CHAR) as cancelled_reason
     FROM deals deals
-    LEFT JOIN person person ON deals.person_id_value = person.id
+        LEFT JOIN person person ON deals.person_id_value = person.id
 )
 SELECT * FROM leads_cte
 UNION
@@ -92,11 +92,15 @@ SELECT * FROM deals_cte;
 
 DROP VIEW leads_deals_person;
 
-select cancelled_reason,
-       mkt_acquisition_term,
-       add_time
+
+select  count(*)
 from leads
-where  mkt_acquisition_channel = 'cpc' and leads.cancelled_reason <> '' AND add_time >= '2024-04-01'
+
+select mkt_acquisition_term,
+       count(*)
+from leads
+where  /*mkt_acquisition_channel = 'cpc' AND*/ add_time>= '2024-04-01'
+group by mkt_acquisition_term;
 
 SELECT column_name, data_type
 FROM information_schema.columns
