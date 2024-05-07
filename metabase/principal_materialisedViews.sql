@@ -41,7 +41,7 @@ WITH leads_cte AS (
                 else cast(cancelled_reason as decimal(10,0))
                 END as CHAR) as cancelled_reason
     FROM leads leads
-    LEFT JOIN person person ON cast(person_id as decimal(10,0)) = person.id
+        LEFT JOIN person person ON cast(person_id as decimal(10,0)) = person.id
 ),
 deals_cte AS (
     SELECT deals.person_id,
@@ -84,13 +84,17 @@ deals_cte AS (
                 else cast(cancelled_reason as decimal(10,0))
                 END as CHAR) as cancelled_reason
     FROM deals deals
-    LEFT JOIN person person ON deals.person_id_value = person.id
+        LEFT JOIN person person ON deals.person_id_value = person.id
 )
 SELECT * FROM leads_cte
 UNION
 SELECT * FROM deals_cte;
 
 DROP VIEW leads_deals_person;
+
+
+select  count(*)
+from leads
 
 select mkt_acquisition_term,
        count(*)
