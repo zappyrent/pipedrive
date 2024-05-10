@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
+<<<<<<< HEAD
+    <data-source source="LOCAL" name="pipedrive@scraper.cx53soegx3qk.eu-west-1.rds.amazonaws.com" uuid="bb96d6bf-777a-4d0a-9f3e-e79b4fd3e0c4">
+=======
     <data-source source="LOCAL" name="pipedrive@scraper.cx53soegx3qk.eu-west-1.rds.amazonaws.com" uuid="6dcd83e6-2559-45f7-920f-f05b0694875e">
+>>>>>>> origin/main
       <driver-ref>mysql.8</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
