@@ -338,29 +338,11 @@ DROP TABLE ade_properties_intestati;
 
 
 /* SECOND CREATE ade+properties intestati*/
-SELECT codfisc,
-       Total_IMM,
-       bp1_all_all_milano_h,
-       bp2_all_100_milano_h,
-       bp3_all_75_milano_h,
-       bp4_proprieta_100_milano_h,
-       bp5_proprieta_75_milano_h,
-       bp6_proprieta_all_milano_h,
-       bp7_proprieta_50_75_milano_h,
-       bp8_proprieta_less50_milano_h,
-       bp9_all_all_roma_c,
-       bp10_all_100_roma_c,
-       bp11_all_75_roma_c,
-       bp12_all_50_75_roma_c,
-       bp13_all_less50_roma_c
-FROM ade_properties_intestati2
-WHERE sent = 1;
-
-Select *
-FROM ade_properties_intestati2
 
 CREATE TABLE ade_properties_intestati2 AS
-SELECT d.id_intestati,
+
+SELECT
+       d.id_intestati,
        d.codfisc,
        d.ricerca_nazionale_done_at,
        d.status_ricerca_nazionale,
@@ -562,10 +544,7 @@ DROP TABLE ade_properties_intestati2;
 
 
 #Last Ricerca Nazionale
-Select id,
-       ricerca_nazionale_done_at
+Select *
 from ade_intestati
-where status_ricerca_nazionale = 'done'
-order by ricerca_nazionale_done_at desc;
-
+order by created_at desc
 
