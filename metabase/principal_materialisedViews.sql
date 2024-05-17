@@ -9,6 +9,7 @@ WITH leads_cte AS (
            leads.codfisc as Codice_Fiscale,
            person.add_time as person_add_time,
            leads.add_time as leads_add_time,
+           '' as deals_add_time,
            leads.Lead_created_Date as lead_created_Date,
            leads.is_archived,
            '' as deal_id,
@@ -39,7 +40,9 @@ WITH leads_cte AS (
                 WHEN cancelled_reason IN (41) then 'Real State Agency'
                 WHEN cancelled_reason IN (43) then 'Room'
                 else 'Other'
-                END as CHAR) as cancelled_reason
+                END as CHAR) as cancelled_reason,
+           person.next_activity_date as person_next_activity_date,
+           '' as stage_id
     FROM leads leads
         LEFT JOIN person person ON cast(person_id as decimal(10,0)) = person.id
 ),
@@ -52,6 +55,7 @@ deals_cte AS (
            deals.codfisc as Codice_Fiscale,
            person.add_time as person_add_time,
            '' as leads_add_time,
+           deals.add_time as deals_add_time,
            deals.Lead_created_Date as lead_created_Date,
            2 AS is_archived,
            deals.deal_id as deal_id,
@@ -82,7 +86,9 @@ deals_cte AS (
                 WHEN cancelled_reason IN (41) then 'Real State Agency'
                 WHEN cancelled_reason IN (43) then 'Room'
                 else 'Other'
-                END as CHAR) as cancelled_reason
+                END as CHAR) as cancelled_reason,
+           person.next_activity_date as person_next_activity_date,
+           deals.stage_id as stage_id
     FROM deals deals
         LEFT JOIN person person ON deals.person_id_value = person.id
 )
@@ -91,6 +97,30 @@ UNION
 SELECT * FROM deals_cte;
 
 DROP VIEW leads_deals_person;
+
+
+select
+      owner_name,
+      title,
+      person_add_time,
+      person_next_activity_date,
+      city,
+      stage_id
+from leads_deals_person
+where pipeline_id = 2 and person_next_activity_date <= current_date and owner_name = 'Alessandra Napolitano'
+order by person_add_time desc;
+
+select
+       person_add_time
+from leads_deals_person
+where is_lead = 0
+  and person_next_activity_date < current_date
+  and pipeline_id = 2
+  and owner_name = 'Alessandra Napolitano'
+order by person_add_time desc;
+
+
+
 
 /* CREATE ade+properties intestati2*/
 CREATE TABLE ade_properties_intestati2 AS
