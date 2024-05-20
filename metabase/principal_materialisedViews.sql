@@ -420,3 +420,5 @@ SELECT * FROM deals_cte
     );
 
 drop view base_ade_properties;
+
+
