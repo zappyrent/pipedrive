@@ -1,5 +1,9 @@
-/* CREATE LEADS_DEALS_PERSON*/
+/* This is the main view and do the append between deals and leads and join with person table*/
+-- When a view is created, this automatically refresh when the tables in the db get an update
+
 CREATE VIEW leads_deals_person AS
+-- First Common table expression (CTE) or subquery, join the leads table with the person table
+-- To add/modify/delete any column, you just add the field here
 WITH leads_cte AS (
     SELECT cast(person_id as decimal(10,0)) as person_id,
            leads.mkt_acquisition_channel as mkt_acquisition_channel,
@@ -46,6 +50,8 @@ WITH leads_cte AS (
     FROM leads leads
         LEFT JOIN person person ON cast(person_id as decimal(10,0)) = person.id
 ),
+-- Second CTE, join the deals table with the person table
+-- To add/modify/delete any column, you just add the field here
 deals_cte AS (
     SELECT deals.person_id,
            deals.mkt_acquisition_channel,
@@ -92,39 +98,25 @@ deals_cte AS (
     FROM deals deals
         LEFT JOIN person person ON deals.person_id_value = person.id
 )
+-- Final SELECT statement, append the leads and deals CTEs
+-- Here is important that the deals_CTE and leads_CTE have the same columns in the same order
+-- To modify anything in any of leads and deals, you should add or modify in the other table to make the append succesful
 SELECT * FROM leads_cte
 UNION
 SELECT * FROM deals_cte;
 
+-- Once you modify the view, you just need to drop the view, and create it again.
+-- After that, it would get refresh automatically in metabase.
 DROP VIEW leads_deals_person;
 
 
-select
-      owner_name,
-      title,
-      person_add_time,
-      person_next_activity_date,
-      city,
-      stage_id
-from leads_deals_person
-where pipeline_id = 2 and person_next_activity_date <= current_date and owner_name = 'Alessandra Napolitano'
-order by person_add_time desc;
-
-select
-       person_add_time
-from leads_deals_person
-where is_lead = 0
-  and person_next_activity_date < current_date
-  and pipeline_id = 2
-  and owner_name = 'Alessandra Napolitano'
-order by person_add_time desc;
-
-
-
+-- The following table is for all the "Buyer persona", full overview dashbaords in metabase. Everything that joins pipedrive and ade production
+-- As this contains more data was needed to be created a TABLLE instead of view. Which to be updated need to be dropped and created again.
 
 /* CREATE ade+properties intestati2*/
 CREATE TABLE ade_properties_intestati2 AS
-WITH n AS (
+-- First Common table expression (CTE) or subquery, join de production with pipedrive and do an append between immobili and immobili nazionale
+WITH big_table AS (
     SELECT
         i.id,
         concat(i.codfisc, im.fogliotipo, im.partnum, im.subanno) AS keycolumn,
@@ -176,7 +168,9 @@ WITH n AS (
     LEFT JOIN base_ade_properties ld ON ld.Codice_Fiscale = i.codfisc
     WHERE im.categoria IN ('A/1', 'A/2', 'A/3', 'A/4', 'A/5', 'A/6', 'A/7', 'A/8', 'A/9', 'A/10', 'A/11')
 ),
-c AS (
+-- Second CTE, group by the codfisc and do the count of the immobili and immobili nazionale
+-- The porpuse of this is to have avoid duplicate immobili (Using the triple key column)
+immobili_duplicate AS (
     SELECT
         n.id,
         n.keycolumn,
@@ -195,9 +189,11 @@ c AS (
         MAX(n.is_lead) AS is_lead,
         MAX(n.aircall_tags) AS aircall_tags,
         MAX(n.mkt_acquisition_medium) AS mkt_acquisition_medium
-    FROM n
+    FROM big_table n
     GROUP BY n.codfisc, n.keycolumn
 ),
+-- Third CTE, group by the codfisc
+-- The porpuse of this is to count the immobilie by territory and citta by intestati
 d AS (
     SELECT
         c.id AS id_intestati,
@@ -224,10 +220,11 @@ d AS (
         COUNT(IF(c.territorio_provincia = 'GENOVA Territorio-GE', 1, NULL)) AS IMM_GENOVA_TERRITORIO,
         COUNT(IF(c.territorio_provincia = 'GE#GENOVA', 1, NULL)) AS IMM_GENOVA_PROVINCIA,
         COUNT(IF(c.territorio_provincia NOT IN ('MILANO Territorio-MI', 'MI#MILANO', 'ROMA Territorio-RM', 'RM#ROMA', 'TORINO Territorio-TO', 'TO#TORINO', 'FIRENZE Territorio-FI', 'FI#FIRENZE', 'GENOVA Territorio-GE', 'GE#GENOVA'), 1, NULL)) AS IMM_OTHER
-    FROM c
+    FROM immobili_duplicate c
     GROUP BY c.codfisc
 )
 -- Final SELECT statement with calculations
+-- In this CTE we do the calculations to get the customized buyer personas, to determine wich buyer persona the intestati belongs
 SELECT
     d.id_intestati,
     d.codfisc,
@@ -325,8 +322,11 @@ SELECT
 FROM d
 GROUP BY d.id_intestati;
 
+-- Drop the table and create it again to update the data
 drop table ade_properties_intestati2;
 
+
+-- The following view is for the base_ade_properties, this is only for the above table, to remove unnecesary columns and to have a clean view
 CREATE VIEW base_ade_properties as (
 WITH leads_cte AS (
     SELECT leads.person_id as person_id,
@@ -419,4 +419,4 @@ UNION
 SELECT * FROM deals_cte
     );
 
-drop view combined;
+drop view base_ade_properties;
