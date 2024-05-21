@@ -5,7 +5,7 @@ from oauth2client.service_account import ServiceAccountCredentials
 import os
 
 # initialize variables for gspread
-creds_directory = str(os.path.dirname(os.path.abspath('__file__'))) + '/GoogleSheetsToMySQL.json'
+creds_directory = str(os.path.dirname(os.path.abspath('__file__'))) + '/etl/pipedrive/pipelines/GoogleSheetsToMySQL.json'
 scope = ['https://spreadsheets.google.com/feeds',
 'https://www.googleapis.com/auth/drive']
 creds = ServiceAccountCredentials.from_json_keyfile_name(creds_directory, scope)
