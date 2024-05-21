@@ -9,7 +9,7 @@ from oauth2client.service_account import ServiceAccountCredentials
 import os
 
 
-creds_directory = str(os.path.dirname(os.path.abspath('__file__'))) + '/etl/pipedrive/pipelines/GoogleSheetsToMySQL.json'
+creds_directory = '/home/elkin/etl/pipedrive/pipelines/GoogleSheetsToMySQL.json'
 
 # initialize variables for gspread
 scope = ['https://spreadsheets.google.com/feeds',
