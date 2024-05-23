@@ -2,11 +2,13 @@ import gspread
 import mysqlcredentials as mc
 import mysql.connector
 from oauth2client.service_account import ServiceAccountCredentials
+import os
 
 # initialize variables for gspread
+creds_directory = '/home/elkin/etl/pipedrive/pipelines/GoogleSheetsToMySQL.json'
 scope = ['https://spreadsheets.google.com/feeds',
 'https://www.googleapis.com/auth/drive']
-creds = ServiceAccountCredentials.from_json_keyfile_name('GoogleSheetsToMySQL.json', scope)
+creds = ServiceAccountCredentials.from_json_keyfile_name(creds_directory, scope)
 client = gspread.authorize(creds)
 
 # define method to pull data from spreadsheet
