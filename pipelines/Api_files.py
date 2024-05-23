@@ -311,21 +311,21 @@ df_deals['org_id.label_ids'] = 0
 
 
 
-df_deals['add_time'] = pd.to_datetime(df_deals['add_time'])
+#df_deals['add_time'] = pd.to_datetime(df_deals['add_time'])
 
 
 
 
-df_deals['update_time'] = pd.to_datetime(df_deals['update_time'])
+#df_deals['update_time'] = pd.to_datetime(df_deals['update_time'])
 
 
 
 
-df_deals['Lead created - Date'] = pd.to_datetime(df_deals['Lead created - Date'])
+#df_deals['Lead created - Date'] = pd.to_datetime(df_deals['Lead created - Date'])
 
 
 
-df_deals['won_time'] = pd.to_datetime(df_deals['won_time'])
+#df_deals['won_time'] = pd.to_datetime(df_deals['won_time'])
 
 
 
