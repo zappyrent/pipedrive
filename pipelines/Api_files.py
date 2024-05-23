@@ -17,84 +17,84 @@ from datetime import datetime
 # Replace 'YOUR_API_TOKEN' with your Pipedrive API token
 api_token = '2be723d875edae489bdce028746e35bef6e3db80'
 
-# # Base URL for the Pipedrive leads endpoint
-# base_url = 'https://zappyrent.pipedrive.com/v1/leads'
-#
-# # Common request parameters (including your API token)
-# common_params = {
-#     'api_token': api_token,
-#     'start': 0,       # The first page index
-#     'limit': 500,     # The number of records per page
-# }
-#
-# # Initialize a list to store all records
-# all_leads = []
-#
-# while True:
-#     # Make a GET request to fetch leads
-#     response = requests.get(base_url, params=common_params)
-#
-#     # Check if the request was successful (status code 200)
-#     if response.status_code == 200:
-#         data = response.json()
-#         leads = data['data']
-#
-#         # Add leads to the main list
-#         all_leads.extend(leads)
-#
-#         # Check if there are more pages to be fetched
-#         pagination_info = data['additional_data']['pagination']
-#         if not pagination_info['more_items_in_collection']:
-#             break
-#
-#         # Update the 'start' value for the next page
-#         common_params['start'] += common_params['limit']
-#     else:
-#         print(f"Request error: {response.status_code} - {response.text}")
-#         break
-#
+# Base URL for the Pipedrive leads endpoint
+base_url = 'https://zappyrent.pipedrive.com/v1/leads'
+
+# Common request parameters (including your API token)
+common_params = {
+    'api_token': api_token,
+    'start': 0,       # The first page index
+    'limit': 500,     # The number of records per page
+}
+
+# Initialize a list to store all records
+all_leads = []
+
+while True:
+    # Make a GET request to fetch leads
+    response = requests.get(base_url, params=common_params)
+
+    # Check if the request was successful (status code 200)
+    if response.status_code == 200:
+        data = response.json()
+        leads = data['data']
+
+        # Add leads to the main list
+        all_leads.extend(leads)
+
+        # Check if there are more pages to be fetched
+        pagination_info = data['additional_data']['pagination']
+        if not pagination_info['more_items_in_collection']:
+            break
+
+        # Update the 'start' value for the next page
+        common_params['start'] += common_params['limit']
+    else:
+        print(f"Request error: {response.status_code} - {response.text}")
+        break
+
 # # 'all_leads' now contains all leads in list format
-# df_leads = json_normalize(all_leads)
-# #df_leads.to_csv(r'C:\Users\PowerBI\Desktop\Power BI\pipedrive\dashboard_files\leads.txt',sep='\t',encoding='utf-8')
-# print(f"Total leads found: {len(all_leads)}")
-#
-# df_leads.rename(columns={"71c903148dc11457f69aba83f90dc9d0ee7d57fb": "available_date",
-#                          "e30d58a6ee435dd8c768a7c68abe54f72f53baa9": "mkt_acquisition_channel",
-#                          "6bd95fa18eb839a1b909b550d7316dd8afb59f4f": "mkt_city_campaigns",
-#                          "c7a0f20bd13245a3c3b459b5426ccd1c61782ae1": "mkt_acquisition_campaigns",
-#                          "a15519619a00909f08af00216ea4c2ffb3963164": "cancelled_reason",
-#                          "252a7fb8fdcdd7ff687c33d1bce5f964b874000b": "property_status",
-#                          "e605cdbbb061dd00ea8252d1b410830cfac0de66": "property_type",
-#                          "9c0928ae67f7b8698c4012ec4bbf334f23cf1a11": "uranus_dashboard",
-#                          "974d7808fa9de9ee49266f33fabb309b109a1685": "property_id",
-#                          "2c4832f2c2dca397c70c64bf0a478dbae635bff6": "city",
-#                          "f4dc2b3f8b7965df490dc8b3c25fcbd090ec2b6d": "note",
-#                          "e98d1f8ff53a34773103a9f2ce9b3ff6199537c5": "archived",
-#                          "eaa56d256066650c5bb0a3b625f71dd6817eea28": "Lead created - Date",
-#                          "8ce2908bbeeee7f6890ed042dc29f76c2840c5a9": "URL",
-#                          "921f82c3f329d8eb8169864481113d0822472848": "Myphoner",
-#                          "8eb0af5491820792745791a5c568447a11a6d1f7": "mkt_acquisition_source",
-#                          "f1ba7aa9ea84dd08a93dd2b5847ff70ebfb517ed": "mkt_acquisition_content",
-#                          "ebafffbe882cf7add8fc2f39f0f1545a8a644bcd": "Hinterland",
-#                          "e7200b1990890527058a4df0f75976c7559f64fd": "mkt_acquisition_medium",
-#                          "1b01467fb3947caaa5d55ffc13457786d1edded1": "mkt_acquisition_term",
-#                          "6d531eec678f16a3bd63c414c4dc5a6310ca32db": "ref_code",
-#                          "81cd4ac0649ffbe517006a8ab9a205f54d599d08": "referral_id",
-#                          "c61aa7beae8120f1eeae79becaeb77321f7b88f5": "Address",
-#                          "524a9902a56a12b832b0571105470c3fa8daf990": "Interessato",
-#                          "eef838068043fa723f3ada7f366af5d138aba01a": "Aircall Tags",
-#                          "8b4f04ce85d872c702e9ad430b709cead479d991": "Qualified Ready nel passato",
-#                          "9869bde30bf6179eceeaaa12372ce9a918b1b41d": "codfisc",
-#                          "158a26b7724e3ba1a3096cc0096344efa03aa24d": "Archiviation Date (Later)", "id": "lead.id"},
-#                 inplace=True)
-#
-#
-#
-# # df_leads.head()
-#
-#
-#
-#
+df_leads = json_normalize(all_leads)
+
+print(f"Total leads found: {len(all_leads)}")
+
+df_leads.rename(columns={"71c903148dc11457f69aba83f90dc9d0ee7d57fb": "available_date",
+                         "e30d58a6ee435dd8c768a7c68abe54f72f53baa9": "mkt_acquisition_channel",
+                         "6bd95fa18eb839a1b909b550d7316dd8afb59f4f": "mkt_city_campaigns",
+                         "c7a0f20bd13245a3c3b459b5426ccd1c61782ae1": "mkt_acquisition_campaigns",
+                         "a15519619a00909f08af00216ea4c2ffb3963164": "cancelled_reason",
+                         "252a7fb8fdcdd7ff687c33d1bce5f964b874000b": "property_status",
+                         "e605cdbbb061dd00ea8252d1b410830cfac0de66": "property_type",
+                         "9c0928ae67f7b8698c4012ec4bbf334f23cf1a11": "uranus_dashboard",
+                         "974d7808fa9de9ee49266f33fabb309b109a1685": "property_id",
+                         "2c4832f2c2dca397c70c64bf0a478dbae635bff6": "city",
+                         "f4dc2b3f8b7965df490dc8b3c25fcbd090ec2b6d": "note",
+                         "e98d1f8ff53a34773103a9f2ce9b3ff6199537c5": "archived",
+                         "eaa56d256066650c5bb0a3b625f71dd6817eea28": "Lead created - Date",
+                         "8ce2908bbeeee7f6890ed042dc29f76c2840c5a9": "URL",
+                         "921f82c3f329d8eb8169864481113d0822472848": "Myphoner",
+                         "8eb0af5491820792745791a5c568447a11a6d1f7": "mkt_acquisition_source",
+                         "f1ba7aa9ea84dd08a93dd2b5847ff70ebfb517ed": "mkt_acquisition_content",
+                         "ebafffbe882cf7add8fc2f39f0f1545a8a644bcd": "Hinterland",
+                         "e7200b1990890527058a4df0f75976c7559f64fd": "mkt_acquisition_medium",
+                         "1b01467fb3947caaa5d55ffc13457786d1edded1": "mkt_acquisition_term",
+                         "6d531eec678f16a3bd63c414c4dc5a6310ca32db": "ref_code",
+                         "81cd4ac0649ffbe517006a8ab9a205f54d599d08": "referral_id",
+                         "c61aa7beae8120f1eeae79becaeb77321f7b88f5": "Address",
+                         "524a9902a56a12b832b0571105470c3fa8daf990": "Interessato",
+                         "eef838068043fa723f3ada7f366af5d138aba01a": "Aircall Tags",
+                         "8b4f04ce85d872c702e9ad430b709cead479d991": "Qualified Ready nel passato",
+                         "9869bde30bf6179eceeaaa12372ce9a918b1b41d": "codfisc",
+                         "158a26b7724e3ba1a3096cc0096344efa03aa24d": "Archiviation Date (Later)", "id": "lead.id"},
+                inplace=True)
+
+
+
+# df_leads.head()
+
+
+
+
 # df_leads['add_time'] = pd.to_datetime(df_leads['add_time'])
 #
 #
@@ -107,96 +107,77 @@ api_token = '2be723d875edae489bdce028746e35bef6e3db80'
 #
 #
 # # ### Lead Preproccessing
-#
-# df_leads['label_ids'] = 0
-#
-#
-#
-#
-# df_leads = df_leads.fillna('NaN')
-#
-#
-#
-#
-# df_leads['mkt_acquisition_term'][(df_leads['mkt_acquisition_channel'] == 'cpc') & (df_leads['cancelled_reason'] != '') & (df_leads['add_time'] >= '2024-04-01') ]
-#
-#
-#
-# #df_leads['mkt_acquisition_term'] = df_leads['mkt_acquisition_term'].str.replace(' ', '_')
-#
-#
-#
-# #df_leads[(df_leads['mkt_acquisition_channel']=='cpc') & (df_leads['add_time'] >= '2024-04-01')]
-#
-#
-#
-#
-# df_leads = df_leads.values.tolist()
-#
-#
-# # # Person
-#
-#
-#
+
+df_leads['label_ids'] = 0
+
+df_leads = df_leads.fillna('NaN')
+
+
+df_leads['mkt_acquisition_term'] = df_leads['mkt_acquisition_term'].str.replace(' ', '_')
+
+
+df_leads = df_leads.values.tolist()
+
+
+
 # ## Person
-# # Replace 'YOUR_API_TOKEN' with your Pipedrive API token
-# api_token = '2be723d875edae489bdce028746e35bef6e3db80'
-#
-# # Base URL for the Pipedrive leads endpoint
-# base_url = ('https://zappyrent.pipedrive.com/v1/persons')
-#
-# # Common request parameters (including your API token)
-# common_params = {
-#     'api_token': api_token,
-#     'start': 0,  # The first page index
-#     'limit': 500,  # The number of records per page
-# }
-#
-# # Initialize a list to store all records
-# all_person = []
-#
-# while True:
-#     # Make a GET request to fetch leads
-#     response = requests.get(base_url, params=common_params)
-#
-#     # Check if the request was successful (status code 200)
-#     if response.status_code == 200:
-#         data = response.json()
-#         deals = data['data']
-#
-#         # Add leads to the main list
-#         all_person.extend(deals)
-#
-#         # Check if there are more pages to be fetched
-#         pagination_info = data['additional_data']['pagination']
-#         if not pagination_info['more_items_in_collection']:
-#             break
-#
-#         # Update the 'start' value for the next page
-#         common_params['start'] += common_params['limit']
-#     else:
-#         print(f"Request error: {response.status_code} - {response.text}")
-#         break
-#
-#
-#
-# df_person = json_normalize(all_person)
-# # df_person.to_csv(r'C:\Users\PowerBI\Desktop\Power BI\pipedrive\dashboard_files\person.txt', sep='\t', encoding='utf-8')
-# print(f"Total person found: {len(all_person)}")
-#
-#
-# # ### Person Preprocessing
-#
-# df_person['email'] = 0
-# df_person['label_ids'] = 0
-# df_person['im'] = 0
-# df_person['org_id.label_ids'] = 0
-#
+# Replace 'YOUR_API_TOKEN' with your Pipedrive API token
+api_token = '2be723d875edae489bdce028746e35bef6e3db80'
+
+# Base URL for the Pipedrive leads endpoint
+base_url = ('https://zappyrent.pipedrive.com/v1/persons')
+
+# Common request parameters (including your API token)
+common_params = {
+    'api_token': api_token,
+    'start': 0,  # The first page index
+    'limit': 500,  # The number of records per page
+}
+
+# Initialize a list to store all records
+all_person = []
+
+while True:
+    # Make a GET request to fetch leads
+    response = requests.get(base_url, params=common_params)
+
+    # Check if the request was successful (status code 200)
+    if response.status_code == 200:
+        data = response.json()
+        deals = data['data']
+
+        # Add leads to the main list
+        all_person.extend(deals)
+
+        # Check if there are more pages to be fetched
+        pagination_info = data['additional_data']['pagination']
+        if not pagination_info['more_items_in_collection']:
+            break
+
+        # Update the 'start' value for the next page
+        common_params['start'] += common_params['limit']
+    else:
+        print(f"Request error: {response.status_code} - {response.text}")
+        break
+
+
+
+df_person = json_normalize(all_person)
+print(f"Total person found: {len(all_person)}")
+
+
+# ### Person Preprocessing
+
+df_person['email'] = 0
+df_person['label_ids'] = 0
+df_person['im'] = 0
+df_person['org_id.label_ids'] = 0
 #
 #
 #
-# # Extract 'value' from 'phone' column
-# df_person['phone'] = df_person['phone'].apply(lambda x: x[0]['value'] if x else None)
+#
+ # Extract 'value' from 'phone' column
+df_person['phone'] = df_person['phone'].apply(lambda x: x[0]['value'] if x else None)
 #
 #
 #
@@ -208,11 +189,11 @@ api_token = '2be723d875edae489bdce028746e35bef6e3db80'
 #
 #
 #
-# df_person = df_person.fillna('NaN')
-#
-#
-#
-# df_person = df_person.values.tolist()
+df_person = df_person.fillna('NaN')
+
+
+
+df_person = df_person.values.tolist()
 
 
 # # Deals
@@ -1023,9 +1004,9 @@ def WriteToMySQLTable_leads(sql_data, tableName):
 
 WriteToMySQLTable(df_deals,'deals_test')
 
-# WriteToMySQLTable_leads(df_leads,'leads_test')
-#
-# WriteToMySQLTable_person(df_person,'person_test')
+WriteToMySQLTable_leads(df_leads,'leads_test')
+
+WriteToMySQLTable_person(df_person,'person_test')
 
 
 
