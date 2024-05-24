@@ -13,10 +13,7 @@ from oauth2client.service_account import ServiceAccountCredentials
 import json
 from datetime import datetime
 
-
 # # Leads
-
-
 # Replace 'YOUR_API_TOKEN' with your Pipedrive API token
 api_token = '2be723d875edae489bdce028746e35bef6e3db80'
 
@@ -29,8 +26,6 @@ common_params = {
     'start': 0,       # The first page index
     'limit': 500,     # The number of records per page
 }
-
-
 
 # Initialize a list to store all records
 all_leads = []
@@ -58,13 +53,10 @@ while True:
         print(f"Request error: {response.status_code} - {response.text}")
         break
 
-
-# 'all_leads' now contains all leads in list format
+# # 'all_leads' now contains all leads in list format
 df_leads = json_normalize(all_leads)
-#df_leads.to_csv(r'C:\Users\PowerBI\Desktop\Power BI\pipedrive\dashboard_files\leads.txt',sep='\t',encoding='utf-8')
+
 print(f"Total leads found: {len(all_leads)}")
-
-
 
 df_leads.rename(columns={"71c903148dc11457f69aba83f90dc9d0ee7d57fb": "available_date",
                          "e30d58a6ee435dd8c768a7c68abe54f72f53baa9": "mkt_acquisition_channel",
@@ -103,50 +95,32 @@ df_leads.rename(columns={"71c903148dc11457f69aba83f90dc9d0ee7d57fb": "available_
 
 
 
-df_leads['add_time'] = pd.to_datetime(df_leads['add_time'])
-
-
-
-df_leads['update_time'] = pd.to_datetime(df_leads['update_time'])
-
-
-
-df_leads['Lead created - Date'] = pd.to_datetime(df_leads['Lead created - Date'])
-
-
-# ### Lead Preproccessing
+# df_leads['add_time'] = pd.to_datetime(df_leads['add_time'])
+#
+#
+#
+# df_leads['update_time'] = pd.to_datetime(df_leads['update_time'])
+#
+#
+#
+# df_leads['Lead created - Date'] = pd.to_datetime(df_leads['Lead created - Date'])
+#
+#
+# # ### Lead Preproccessing
 
 df_leads['label_ids'] = 0
-
-
-
 
 df_leads = df_leads.fillna('NaN')
 
 
-
-
-df_leads['mkt_acquisition_term'][(df_leads['mkt_acquisition_channel'] == 'cpc') & (df_leads['cancelled_reason'] != '') & (df_leads['add_time'] >= '2024-04-01') ]
-
-
-
-#df_leads['mkt_acquisition_term'] = df_leads['mkt_acquisition_term'].str.replace(' ', '_')
-
-
-
-#df_leads[(df_leads['mkt_acquisition_channel']=='cpc') & (df_leads['add_time'] >= '2024-04-01')]
-
-
+df_leads['mkt_acquisition_term'] = df_leads['mkt_acquisition_term'].str.replace(' ', '_')
 
 
 df_leads = df_leads.values.tolist()
 
 
-# # Person
 
-
-
-## Person
+# ## Person
 # Replace 'YOUR_API_TOKEN' with your Pipedrive API token
 api_token = '2be723d875edae489bdce028746e35bef6e3db80'
 
@@ -189,7 +163,6 @@ while True:
 
 
 df_person = json_normalize(all_person)
-# df_person.to_csv(r'C:\Users\PowerBI\Desktop\Power BI\pipedrive\dashboard_files\person.txt', sep='\t', encoding='utf-8')
 print(f"Total person found: {len(all_person)}")
 
 
@@ -199,23 +172,23 @@ df_person['email'] = 0
 df_person['label_ids'] = 0
 df_person['im'] = 0
 df_person['org_id.label_ids'] = 0
-
-
-
-
-# Extract 'value' from 'phone' column
+#
+#
+#
+#
+ # Extract 'value' from 'phone' column
 df_person['phone'] = df_person['phone'].apply(lambda x: x[0]['value'] if x else None)
-
-
-
-df_person['add_time'] = pd.to_datetime(df_person['add_time'])
-
-
-
-df_person['update_time'] = pd.to_datetime(df_person['update_time'])
-
-
-
+#
+#
+#
+# df_person['add_time'] = pd.to_datetime(df_person['add_time'])
+#
+#
+#
+# df_person['update_time'] = pd.to_datetime(df_person['update_time'])
+#
+#
+#
 df_person = df_person.fillna('NaN')
 
 
@@ -319,21 +292,21 @@ df_deals['org_id.label_ids'] = 0
 
 
 
-df_deals['add_time'] = pd.to_datetime(df_deals['add_time'])
+#df_deals['add_time'] = pd.to_datetime(df_deals['add_time'])
 
 
 
 
-df_deals['update_time'] = pd.to_datetime(df_deals['update_time'])
+#df_deals['update_time'] = pd.to_datetime(df_deals['update_time'])
 
 
 
 
-df_deals['Lead created - Date'] = pd.to_datetime(df_deals['Lead created - Date'])
+#df_deals['Lead created - Date'] = pd.to_datetime(df_deals['Lead created - Date'])
 
 
 
-df_deals['won_time'] = pd.to_datetime(df_deals['won_time'])
+#df_deals['won_time'] = pd.to_datetime(df_deals['won_time'])
 
 
 
@@ -1029,17 +1002,11 @@ def WriteToMySQLTable_leads(sql_data, tableName):
 
 
 
-WriteToMySQLTable_leads(df_leads,'leads')
+WriteToMySQLTable(df_deals,'deals_test')
 
+WriteToMySQLTable_leads(df_leads,'leads_test')
 
-
-
-WriteToMySQLTable(df_deals,'deals')
-
-
-
-
-WriteToMySQLTable_person(df_person,'person')
+WriteToMySQLTable_person(df_person,'person_test')
 
 
 
