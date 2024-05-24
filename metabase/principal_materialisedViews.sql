@@ -113,6 +113,8 @@ DROP VIEW leads_deals_person;
 -- The following table is for all the "Buyer persona", full overview dashbaords in metabase. Everything that joins pipedrive and ade production
 -- As this contains more data was needed to be created a TABLLE instead of view. Which to be updated need to be dropped and created again.
 
+drop table ade_properties_intestati2;
+
 /* CREATE ade+properties intestati2*/
 CREATE TABLE ade_properties_intestati2 AS
 -- First Common table expression (CTE) or subquery, join de production with pipedrive and do an append between immobili and immobili nazionale
@@ -324,6 +326,7 @@ GROUP BY d.id_intestati;
 
 -- Drop the table and create it again to update the data
 drop table ade_properties_intestati2;
+
 
 
 -- The following view is for the base_ade_properties, this is only for the above table, to remove unnecesary columns and to have a clean view
