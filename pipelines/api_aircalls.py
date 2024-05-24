@@ -128,7 +128,7 @@ script_insert_or_update_calls = """
 """
 
 # Retrieve database configuration from Airflow Variable
-api_test = 'True'
+api_test = False
 api_limit = 500
 api_start = 0
 api_aircalls_url = 'https://api.aircall.io/v1/calls?order=desc&per_page=50'
@@ -169,7 +169,7 @@ def insert_update_number(cursor, number_data):
         cursor.execute(script_insert_or_update_numbers, values)
         print("User insert/update successful.")
     except Exception as e:
-        print(f"Failed to insert/update number {user_id}: {e}")
+        print(f"Failed to insert/update number {number_id}: {e}")
 
     return number_id
 
@@ -249,6 +249,10 @@ def insert_update_call(cursor, call_data):
         number_id = insert_update_number(cursor, call_data.get("number"))
     else:
         number_id = None
+
+    # Validate and insert the assigned_to
+    if isinstance(assigned_to, dict):
+        assigned_to = assigned_to.get("name")
 
     cost = call_data.get("cost")
     country_code_a2 = call_data.get("country_code_a2")
@@ -391,22 +395,27 @@ def fetch_all_calls():
             password='#8LsH25%ZD',
             host='scraper.cx53soegx3qk.eu-west-1.rds.amazonaws.com',
             database='pipedrive')
-        start_date_str = "2024-03-10"
-        # Define your SQL SELECT command
-        sql_query = "SELECT started_at FROM pipedrive.aircalls_calls_dag ORDER BY started_at DESC LIMIT 1;"
-        # Execute the SQL command and fetch the first record
-        last_date_result = mysql_conn.cursor().execute(sql_query).fetchone()
-        last_date = last_date_result[0] if last_date_result else None
+        start_date_str = "2024-05-17"
+        # # Define your SQL SELECT command
+        # sql_query = "SELECT started_at FROM pipedrive.aircalls_calls_dag ORDER BY started_at DESC LIMIT 1;"
+        # # Execute the SQL command and fetch the first record
+        # cursor = mysql_conn.cursor()
+        # cursor.execute(sql_query)
+        # last_date_result = cursor.fetchone()
+        # last_date = last_date_result[0] if last_date_result else None
+        #
+        # if last_date:
+        #     start_year = last_date.year
+        #     start_month = last_date.month
+        #     start_day = last_date.day
 
-        if last_date:
-            start_year = last_date.year
-            start_month = last_date.month
-            start_day = last_date.day
+        end_date_str = datetime.now().strftime("%Y-%m-%d")
 
         # Here, we use last_started_at_date as startDate and calculate endDate to be one month later
         start_date = datetime.strptime(start_date_str, "%Y-%m-%d")
-        _, last_day = calendar.monthrange(start_date.year, start_date.month)
-        end_date = datetime(start_date.year, start_date.month, last_day)
+        # _, last_day = calendar.monthrange(start_date.year, start_date.month)
+        # end_date = datetime(start_date.year, start_date.month, last_day)
+        end_date = datetime.strptime(end_date_str, "%Y-%m-%d")
         print(f"Start date: {start_date}, End date: {end_date}")
         current_date = start_date
         while current_date <= end_date:
