@@ -49,7 +49,7 @@ def WriteToMySQLTable2(sql_data, tableName):
         sql_insert_statement = """INSERT INTO {}( 
             Day,
             Campaign,
-            Region,
+            Ad_group,
             Cost,
             Impressions,
             Clicks,
