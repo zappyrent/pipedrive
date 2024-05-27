@@ -39,7 +39,7 @@ def WriteToMySQLTable2(sql_data, tableName):
         sql_create_table = """CREATE TABLE {}( 
             Day DATE,
             Campaign VARCHAR(100),
-            Region VARCHAR(100),
+            Ad_group VARCHAR(100),
             Cost VARCHAR(100),
             Impressions VARCHAR(100),
             Clicks VARCHAR(100),
