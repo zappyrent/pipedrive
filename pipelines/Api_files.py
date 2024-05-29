@@ -113,9 +113,6 @@ df_leads['label_ids'] = 0
 df_leads = df_leads.fillna('NaN')
 
 
-df_leads['mkt_acquisition_term'] = df_leads['mkt_acquisition_term'].str.replace(' ', '_')
-
-
 df_leads = df_leads.values.tolist()
 
 
@@ -1002,11 +999,11 @@ def WriteToMySQLTable_leads(sql_data, tableName):
 
 
 
-WriteToMySQLTable(df_deals,'deals_test')
+WriteToMySQLTable(df_deals,'deals')
 
-WriteToMySQLTable_leads(df_leads,'leads_test')
+WriteToMySQLTable_leads(df_leads,'leads')
 
-WriteToMySQLTable_person(df_person,'person_test')
+WriteToMySQLTable_person(df_person,'person')
 
 
 
