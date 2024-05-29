@@ -48,7 +48,7 @@ WITH leads_cte AS (
            person.next_activity_date as person_next_activity_date,
            '' as stage_id
     FROM leads leads
-        LEFT JOIN person person ON cast(person_id as decimal(10,0)) = person.id
+        LEFT JOIN person person ON cast(leads.person_id as decimal(10,0)) = person.id
 ),
 -- Second CTE, join the deals table with the person table
 -- To add/modify/delete any column, you just add the field here

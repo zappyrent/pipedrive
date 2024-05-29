@@ -112,9 +112,7 @@ df_leads['label_ids'] = 0
 
 df_leads = df_leads.fillna('NaN')
 
-
 df_leads = df_leads.values.tolist()
-
 
 
 # ## Person
