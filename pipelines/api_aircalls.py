@@ -395,7 +395,7 @@ def fetch_all_calls():
             password='#8LsH25%ZD',
             host='scraper.cx53soegx3qk.eu-west-1.rds.amazonaws.com',
             database='pipedrive')
-        start_date_str = "2024-05-17"
+        start_date_str = "2024-05-20"
         # # Define your SQL SELECT command
         # sql_query = "SELECT started_at FROM pipedrive.aircalls_calls_dag ORDER BY started_at DESC LIMIT 1;"
         # # Execute the SQL command and fetch the first record
