@@ -9,10 +9,13 @@ import sys
 import mysqlcredentials as mc
 import mysql.connector
 from oauth2client.service_account import ServiceAccountCredentials
+from datetime import datetime
+import mysql.connector
+from sqlalchemy import create_engine
+from sqlalchemy.engine import URL
 
-
-
-
+#!/usr/bin/env python
+# coding: utf-8
 
 def connect():
     connection = None
@@ -22,7 +25,7 @@ def connect():
                                       password="U9tt4[C$4Zv",
                                       host="postgres-production.cx53soegx3qk.eu-west-1.rds.amazonaws.com",
                                       dbname="postgres")
-        
+
     except (Exception, psycopg2.DatabaseError) as error:
         print(error)
         sys.exit(1)
@@ -34,8 +37,8 @@ def connect():
 
 
 def sql_to_dataframe(conn, query, column_names):
-   """ 
-   Import data from a PostgreSQL database using a SELECT query 
+   """
+   Import data from a PostgreSQL database using a SELECT query
    """
    cursor = conn.cursor()
    try:
@@ -44,7 +47,7 @@ def sql_to_dataframe(conn, query, column_names):
        print("Error: %s" % error)
        cursor.close()
        return 1
-   
+
    tuples_list = cursor.fetchall()
    cursor.close()
    # Now we need to transform the list into a pandas DataFrame:
@@ -187,7 +190,7 @@ query_visits = """SELECT id,
 #creating a list with columns names to pass into the function
 column_names_visits = ['id','status','type','property_id','user_id','email','phone_no','proposed_date_time','proposed_duration','created_at','updated_at','event_id','comment','outcome','alternative_date_time','video_visit','note','source','created_by','deletion_reason','deleted_by','tenant_full_name','is_verified','number_of_adult_guests','number_of_children_guests','has_pets_guests','lease_term_request','tenant_profession']
 
-#creating a query variable to store our query to pass into the function                          
+#creating a query variable to store our query to pass into the function
 query_client_account_managers = """SELECT client_id,
                                            account_manager_id
                                     FROM postgres.rmt.client_account_managers
@@ -196,7 +199,7 @@ query_client_account_managers = """SELECT client_id,
 #creating a list with columns names to pass into the function
 column_names_client_account_manager = ['client_id','account_manager_id']
 
-#creating a query variable to store our query to pass into the function                          
+#creating a query variable to store our query to pass into the function
 query_account_managers = """SELECT id,
                                    status,
                                    email,
@@ -210,7 +213,7 @@ query_account_managers = """SELECT id,
 #creating a list with columns names to pass into the function
 column_names_account_managers = ['id','status','email','password','name','type','phone']
 
-#creating a query variable to store our query to pass into the function                          
+#creating a query variable to store our query to pass into the function
 query_properties_next_available_slots = """SELECT id,
                                                   property_id,
                                                   next_available_slot,
@@ -222,7 +225,7 @@ query_properties_next_available_slots = """SELECT id,
 #creating a list with columns names to pass into the function
 column_names_properties_next_available_slots = ['id','property_id','next_available_slot','created_at','updated_at']
 
-#creating a query variable to store our query to pass into the function                          
+#creating a query variable to store our query to pass into the function
 query_listing_highlight = """SELECT listing_id,
                                     highlight
                             FROM postgres.rmt.listing_highlight
@@ -231,7 +234,7 @@ query_listing_highlight = """SELECT listing_id,
 #creating a list with columns names to pass into the function
 column_names_listing_highlight = ['listing_id','highlight']
 
-#creating a query variable to store our query to pass into the function                          
+#creating a query variable to store our query to pass into the function
 query_events= """SELECT id,
                           sf_id,
                           subject,
@@ -254,7 +257,7 @@ query_events= """SELECT id,
 #creating a list with columns names to pass into the function
 column_names_events = ['id','sf_id','subject','location','is_all_day','start_date_time','end_date_time','start_date','duration_in_min','description','lead_id','status','created_at','updated_at','created_by','owner_id']
 
-#creating a query variable to store our query to pass into the function                          
+#creating a query variable to store our query to pass into the function
 query_properties2= """SELECT id,
                             owner_id,
                             pz,
@@ -288,8 +291,9 @@ query_properties2= """SELECT id,
 
 #creating a list with columns names to pass into the function
 column_names_properties2 = ['id','owner_id','pz','status','type','created_at','updated_at','total_housemates','without_images_at','landlord_availability','name','activated_at','subscription','cadastral_sheet','cadastral_parcel','cadastral_subordinate','cadastral_category','cadastral_income','has_zappyrent_keys','switch_bills_to_tenant_name','exclusive','runner_email','allow_children','allow_students','max_number_of_guests','matterport_link','disabled_at','disabled_reason']
-                    
-                          #creating a query variable to store our query to pass into the function                          
+
+                          #creating a query variable to store our query to pass into the function
+
 query_booking_attachments= """SELECT id,
                           status,
                           type,
@@ -367,7 +371,7 @@ def WriteToMySQLTable_bookings(sql_data, tableName):
         )
 
         sql_drop = " DROP TABLE IF EXISTS {} ".format(tableName)
-        sql_create_table = """CREATE TABLE {}( 
+        sql_create_table = """CREATE TABLE {}(
                           id VARCHAR(100),
                           user_id VARCHAR(100),
                           pz VARCHAR(100),
@@ -388,8 +392,8 @@ def WriteToMySQLTable_bookings(sql_data, tableName):
                           scheduled_checkin_datetime DATE,
                           ready_for_credit_check VARCHAR(100)
             )""".format(tableName)
- 
-        sql_insert_statement = """INSERT INTO {}( 
+
+        sql_insert_statement = """INSERT INTO {}(
                           id,
                           user_id,
                           pz,
@@ -451,7 +455,7 @@ def WriteToMySQLTable_booking_details(sql_data, tableName):
         )
 
         sql_drop = " DROP TABLE IF EXISTS {} ".format(tableName)
-        sql_create_table = """CREATE TABLE {}( 
+        sql_create_table = """CREATE TABLE {}(
             booking_id VARCHAR(100),
             reason VARCHAR(100),
             lost VARCHAR(100),
@@ -463,8 +467,8 @@ def WriteToMySQLTable_booking_details(sql_data, tableName):
             runner VARCHAR(100),
             ready_for_date DATE
             )""".format(tableName)
- 
-        sql_insert_statement = """INSERT INTO {}( 
+
+        sql_insert_statement = """INSERT INTO {}(
             booking_id,
             reason,
             lost,
@@ -517,7 +521,7 @@ def WriteToMySQLTable_booking_properties(sql_data, tableName):
         )
 
         sql_drop = " DROP TABLE IF EXISTS {} ".format(tableName)
-        sql_create_table = """CREATE TABLE {}( 
+        sql_create_table = """CREATE TABLE {}(
                           id VARCHAR(100),
                           owner_id VARCHAR(100),
                           pz VARCHAR(100),
@@ -546,8 +550,8 @@ def WriteToMySQLTable_booking_properties(sql_data, tableName):
                           disabled_at DATE,
                           disabled_reason VARCHAR(100)
             )""".format(tableName)
- 
-        sql_insert_statement = """INSERT INTO {}( 
+
+        sql_insert_statement = """INSERT INTO {}(
                           id,
                           owner_id,
                           pz,
@@ -618,7 +622,7 @@ def WriteToMySQLTable_lead_properties(sql_data, tableName):
         )
 
         sql_drop = " DROP TABLE IF EXISTS {} ".format(tableName)
-        sql_create_table = """CREATE TABLE {}( 
+        sql_create_table = """CREATE TABLE {}(
                           id VARCHAR(100),
                           my_phoner_id VARCHAR(100),
                           property_id VARCHAR(100),
@@ -637,8 +641,8 @@ def WriteToMySQLTable_lead_properties(sql_data, tableName):
                           pipedrive_owner_id VARCHAR(100),
                           pipedrive_owner_email VARCHAR(100)
                           )""".format(tableName)
- 
-        sql_insert_statement = """INSERT INTO {}( 
+
+        sql_insert_statement = """INSERT INTO {}(
                           id,
                           my_phoner_id,
                           property_id,
@@ -699,7 +703,7 @@ def WriteToMySQLTable_visits(sql_data, tableName):
         )
 
         sql_drop = " DROP TABLE IF EXISTS {} ".format(tableName)
-        sql_create_table = """CREATE TABLE {}( 
+        sql_create_table = """CREATE TABLE {}(
                           id VARCHAR(100),
                           status VARCHAR(100),
                           type VARCHAR(100),
@@ -729,8 +733,8 @@ def WriteToMySQLTable_visits(sql_data, tableName):
                           lease_term_request VARCHAR(100),
                           tenant_profession VARCHAR(100)
                           )""".format(tableName)
- 
-        sql_insert_statement = """INSERT INTO {}( 
+
+        sql_insert_statement = """INSERT INTO {}(
                           id,
                           status,
                           type,
@@ -802,13 +806,13 @@ def WriteToMySQLTable_client_account_managers(sql_data, tableName):
         )
 
         sql_drop = " DROP TABLE IF EXISTS {} ".format(tableName)
-        
-        sql_create_table = """CREATE TABLE {}( 
+
+        sql_create_table = """CREATE TABLE {}(
                           client_id VARCHAR(100),
                           account_manager_id VARCHAR(100)
                           )""".format(tableName)
- 
-        sql_insert_statement = """INSERT INTO {}( 
+
+        sql_insert_statement = """INSERT INTO {}(
                           client_id,
                           account_manager_id)
         VALUES (%s,%s)""".format(tableName)
@@ -853,8 +857,8 @@ def WriteToMySQLTable_account_managers(sql_data, tableName):
         )
 
         sql_drop = " DROP TABLE IF EXISTS {} ".format(tableName)
-        
-        sql_create_table = """CREATE TABLE {}( 
+
+        sql_create_table = """CREATE TABLE {}(
                           id VARCHAR(100),
                           status VARCHAR(100),
                           email VARCHAR(100),
@@ -863,8 +867,8 @@ def WriteToMySQLTable_account_managers(sql_data, tableName):
                           type VARCHAR(100),
                           phone VARCHAR(100)
                           )""".format(tableName)
- 
-        sql_insert_statement = """INSERT INTO {}( 
+
+        sql_insert_statement = """INSERT INTO {}(
                           id,
                           status,
                           email,
@@ -914,16 +918,16 @@ def WriteToMySQLTable_properties_next_available_slots(sql_data, tableName):
         )
 
         sql_drop = " DROP TABLE IF EXISTS {} ".format(tableName)
-        
-        sql_create_table = """CREATE TABLE {}( 
+
+        sql_create_table = """CREATE TABLE {}(
                           id VARCHAR(100),
                           property_id VARCHAR(100),
                           next_available_slot VARCHAR(100),
                           created_at VARCHAR(100),
                           updated_at VARCHAR(100)
                           )""".format(tableName)
- 
-        sql_insert_statement = """INSERT INTO {}( 
+
+        sql_insert_statement = """INSERT INTO {}(
                           id,
                           property_id,
                           next_available_slot,
@@ -971,13 +975,13 @@ def WriteToMySQLTable_listing_highlight(sql_data, tableName):
         )
 
         sql_drop = " DROP TABLE IF EXISTS {} ".format(tableName)
-        
-        sql_create_table = """CREATE TABLE {}( 
+
+        sql_create_table = """CREATE TABLE {}(
                           listing_id VARCHAR(100),
                           highlight VARCHAR(100)
                           )""".format(tableName)
- 
-        sql_insert_statement = """INSERT INTO {}( 
+
+        sql_insert_statement = """INSERT INTO {}(
                           listing_id,
                           highlight)
         VALUES (%s,%s)""".format(tableName)
@@ -1022,8 +1026,8 @@ def WriteToMySQLTable_events(sql_data, tableName):
         )
 
         sql_drop = " DROP TABLE IF EXISTS {} ".format(tableName)
-        
-        sql_create_table = """CREATE TABLE {}( 
+
+        sql_create_table = """CREATE TABLE {}(
                           id VARCHAR(100),
                           sf_id VARCHAR(100),
                           subject VARCHAR(100),
@@ -1041,8 +1045,8 @@ def WriteToMySQLTable_events(sql_data, tableName):
                           created_by VARCHAR(100),
                           owner_id VARCHAR(100)
                           )""".format(tableName)
- 
-        sql_insert_statement = """INSERT INTO {}( 
+
+        sql_insert_statement = """INSERT INTO {}(
                           id,
                           sf_id,
                           subject,
@@ -1101,8 +1105,8 @@ def WriteToMySQLTable_properties(sql_data, tableName):
         )
 
         sql_drop = " DROP TABLE IF EXISTS {} ".format(tableName)
-        
-        sql_create_table = """CREATE TABLE {}( 
+
+        sql_create_table = """CREATE TABLE {}(
                           id VARCHAR(100),
                             owner_id VARCHAR(100),
                             pz VARCHAR(100),
@@ -1132,8 +1136,8 @@ def WriteToMySQLTable_properties(sql_data, tableName):
                             disabled_at VARCHAR(100),
                             disabled_reason VARCHAR(100)
                           )""".format(tableName)
- 
-        sql_insert_statement = """INSERT INTO {}( 
+
+        sql_insert_statement = """INSERT INTO {}(
                           id,
                             owner_id,
                             pz,
@@ -1204,8 +1208,8 @@ def WriteToMySQLTable_booking_attachments(sql_data, tableName):
         )
 
         sql_drop = " DROP TABLE IF EXISTS {} ".format(tableName)
-        
-        sql_create_table = """CREATE TABLE {}( 
+
+        sql_create_table = """CREATE TABLE {}(
                           id VARCHAR(100),
                           status VARCHAR(100),
                           type VARCHAR(100),
@@ -1216,8 +1220,8 @@ def WriteToMySQLTable_booking_attachments(sql_data, tableName):
                           retrieval_type VARCHAR(100),
                           description VARCHAR(100)
                           )""".format(tableName)
- 
-        sql_insert_statement = """INSERT INTO {}( 
+
+        sql_insert_statement = """INSERT INTO {}(
                           id,
                           status,
                           type,
@@ -1255,74 +1259,92 @@ def WriteToMySQLTable_booking_attachments(sql_data, tableName):
             print("MySQL connection is closed.")
 
 
-
-
-
-WriteToMySQLTable_bookings(data_bookings, 'bookings')
-
-
-
-
-
-WriteToMySQLTable_booking_details(data_booking_details, 'booking_details')
+WriteToMySQLTable_bookings(data_bookings, 'bookings_test')
 
 
 
 
 
-WriteToMySQLTable_booking_properties(data_booking_properties, 'booking_properties')
+WriteToMySQLTable_booking_details(data_booking_details, 'booking_details_test')
 
 
 
 
 
-WriteToMySQLTable_lead_properties(data_lead_properties, 'lead_properties')
+WriteToMySQLTable_booking_properties(data_booking_properties, 'booking_properties_test')
 
 
 
 
 
-WriteToMySQLTable_visits(data_visits, 'visits')
+WriteToMySQLTable_lead_properties(data_lead_properties, 'lead_properties_test')
 
 
 
 
 
-WriteToMySQLTable_client_account_managers(data_client_account_managers, 'client_account_managers')
+WriteToMySQLTable_visits(data_visits, 'visits_test')
 
 
 
 
 
-WriteToMySQLTable_account_managers(data_account_managers, 'account_managers')
+WriteToMySQLTable_client_account_managers(data_client_account_managers, 'client_account_managers_test')
 
 
 
 
 
-WriteToMySQLTable_properties_next_available_slots(data_properties_next_available_slots, 'properties_next_available_slots')
+WriteToMySQLTable_account_managers(data_account_managers, 'account_managers_test')
 
 
 
 
 
-WriteToMySQLTable_listing_highlight(data_listing_highlight, 'listing_highlight')
+WriteToMySQLTable_properties_next_available_slots(data_properties_next_available_slots, 'properties_next_available_slots_test')
 
 
 
 
 
-WriteToMySQLTable_events(data_events, 'events')
+WriteToMySQLTable_listing_highlight(data_listing_highlight, 'listing_highlight_test')
 
 
 
 
 
-WriteToMySQLTable_properties(data_properties, 'properties')
+WriteToMySQLTable_events(data_events, 'events_test')
 
 
 
 
 
-WriteToMySQLTable_booking_attachments(data_booking_attachments, 'booking_attachments')
+WriteToMySQLTable_properties(data_properties, 'properties_test')
 
+
+
+
+
+WriteToMySQLTable_booking_attachments(data_booking_attachments, 'booking_attachments_test')
+
+def updatetime():
+    try:
+        connection = mysql.connector.connect(host=mc.host,
+                                             database=mc.database,
+                                             user=mc.user,
+                                             password=mc.password)
+
+        print("Connected to the database is successful")
+
+        connurl = URL.create("mysql+mysqlconnector", username=mc.user, password=mc.password, host=mc.host, database=mc.database)
+        engine = create_engine(connurl)
+
+        df = pd.DataFrame({'tableName': ['bookings'], 'timestamp': [datetime.now()]})
+        df.to_sql('update_time', con=engine, if_exists='append', index=False)
+        print("Update time inserted successfully")
+
+    except Exception as e:
+        print("Error: ", e)
+        print("Connection failed!")
+
+updatetime()

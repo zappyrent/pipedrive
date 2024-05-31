@@ -13,7 +13,10 @@ import json
 import time
 import re
 
-
+import pandas as pd
+import mysqlcredentials as mc
+from sqlalchemy import create_engine
+from sqlalchemy.engine import URL
 
 script_create_table_numbers = """
     CREATE TABLE IF NOT EXISTS aircalls_numbers_dag (
@@ -33,17 +36,17 @@ script_create_table_numbers = """
     """
 
 script_insert_or_update_numbers = """
-        INSERT INTO aircalls_numbers_dag (id, direct_link, name, digits, country, time_zone, open, availability_status, is_ivr, live_recording_activated, priority, created_at) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s) ON DUPLICATE KEY UPDATE 
-        direct_link = VALUES(direct_link), 
-        name = VALUES(name), 
-        digits = VALUES(digits), 
-        country = VALUES(country), 
-        time_zone = VALUES(time_zone), 
-        open = VALUES(open), 
-        availability_status = VALUES(availability_status), 
-        is_ivr = VALUES(is_ivr), 
-        live_recording_activated = VALUES(live_recording_activated), 
-        priority = VALUES(priority), 
+        INSERT INTO aircalls_numbers_dag (id, direct_link, name, digits, country, time_zone, open, availability_status, is_ivr, live_recording_activated, priority, created_at) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s) ON DUPLICATE KEY UPDATE
+        direct_link = VALUES(direct_link),
+        name = VALUES(name),
+        digits = VALUES(digits),
+        country = VALUES(country),
+        time_zone = VALUES(time_zone),
+        open = VALUES(open),
+        availability_status = VALUES(availability_status),
+        is_ivr = VALUES(is_ivr),
+        live_recording_activated = VALUES(live_recording_activated),
+        priority = VALUES(priority),
         created_at = VALUES(created_at);
         """
 
@@ -63,15 +66,15 @@ script_create_table_users = """
 """
 # Create insert/update script for users
 script_insert_or_update_users = """
-    INSERT INTO aircalls_users_dag (id, direct_link, name, email, available, availability_status, created_at, time_zone, language, wrap_up_time) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s) ON DUPLICATE KEY UPDATE 
-    direct_link = VALUES(direct_link), 
-    name = VALUES(name), 
-    email = VALUES(email), 
-    available = VALUES(available), 
-    availability_status = VALUES(availability_status), 
-    created_at = VALUES(created_at), 
-    time_zone = VALUES(time_zone), 
-    language = VALUES(language), 
+    INSERT INTO aircalls_users_dag (id, direct_link, name, email, available, availability_status, created_at, time_zone, language, wrap_up_time) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s) ON DUPLICATE KEY UPDATE
+    direct_link = VALUES(direct_link),
+    name = VALUES(name),
+    email = VALUES(email),
+    available = VALUES(available),
+    availability_status = VALUES(availability_status),
+    created_at = VALUES(created_at),
+    time_zone = VALUES(time_zone),
+    language = VALUES(language),
     wrap_up_time = VALUES(wrap_up_time);
     """
 
@@ -89,12 +92,12 @@ script_create_table_calls = """
                 voicemail TEXT,
                 asset TEXT,
                 raw_digits VARCHAR(50),
-                user_id BIGINT, 
+                user_id BIGINT,
                 archived BOOLEAN,
-                assigned_to TEXT, 
-                transferred_by TEXT, 
-                transferred_to TEXT, 
-                number_id BIGINT, 
+                assigned_to TEXT,
+                transferred_by TEXT,
+                transferred_to TEXT,
+                number_id BIGINT,
                 cost DECIMAL(10,2),
                 country_code_a2 VARCHAR(2),
                 pricing_type VARCHAR(50)
@@ -103,8 +106,8 @@ script_create_table_calls = """
 
 # Create insert/update script for calls
 script_insert_or_update_calls = """
-    INSERT INTO aircalls_calls_dag (id, direct_link, direction, status, missed_call_reason, started_at, answered_at, ended_at, duration, voicemail, asset, raw_digits, user_id, archived, assigned_to, transferred_by, transferred_to, number_id, cost, country_code_a2, pricing_type) 
-    VALUES (%s, %s,%s, %s,%s, %s,%s, %s,%s, %s,%s, %s,%s, %s,%s, %s,%s, %s,%s, %s,%s) ON DUPLICATE KEY UPDATE 
+    INSERT INTO aircalls_calls_dag (id, direct_link, direction, status, missed_call_reason, started_at, answered_at, ended_at, duration, voicemail, asset, raw_digits, user_id, archived, assigned_to, transferred_by, transferred_to, number_id, cost, country_code_a2, pricing_type)
+    VALUES (%s, %s,%s, %s,%s, %s,%s, %s,%s, %s,%s, %s,%s, %s,%s, %s,%s, %s,%s, %s,%s) ON DUPLICATE KEY UPDATE
                 direct_link = VALUES(direct_link),
                 direction = VALUES(direction),
                 status = VALUES(status),
@@ -464,3 +467,25 @@ def fetch_all_calls():
 
 fetch_all_calls()
 
+def updatetime():
+    try:
+        connection = mysql.connector.connect(host=mc.host,
+                                             database=mc.database,
+                                             user=mc.user,
+                                             password=mc.password)
+
+        print("Connected to the database is successful")
+
+        connurl = URL.create("mysql+mysqlconnector", username=mc.user, password=mc.password, host=mc.host, database=mc.database)
+        engine = create_engine(connurl)
+
+        df = pd.DataFrame({'tableName': ['aircalls'], 'timestamp': [datetime.now()]})
+        df.to_sql('update_time', con=engine, if_exists='append', index=False)
+        print("Update time inserted successfully")
+
+    except Exception as e:
+        print("Error: ", e)
+        print("Connection failed!")
+
+
+updatetime()
