@@ -143,6 +143,7 @@ WITH big_table AS (
     LEFT JOIN ade_citta c ON c.id = im.id_citta
     LEFT JOIN base_ade_properties ld ON ld.Codice_Fiscale = i.codfisc
     WHERE im.categoria IN ('A01', 'A02', 'A03', 'A04', 'A05', 'A06', 'A07', 'A08', 'A09', 'A10', 'A11')
+            and i.codfisc REGEXP '^[a-zA-Z]' = 1
 
     UNION
 
@@ -169,6 +170,7 @@ WITH big_table AS (
     INNER JOIN ade_immobili_nazionale im ON im.id = inm.id_immobilinazionale
     LEFT JOIN base_ade_properties ld ON ld.Codice_Fiscale = i.codfisc
     WHERE im.categoria IN ('A/1', 'A/2', 'A/3', 'A/4', 'A/5', 'A/6', 'A/7', 'A/8', 'A/9', 'A/10', 'A/11')
+        and i.codfisc REGEXP '^[a-zA-Z]' = 1
 ),
 -- Second CTE, group by the codfisc and do the count of the immobili and immobili nazionale
 -- The porpuse of this is to have avoid duplicate immobili (Using the triple key column)
