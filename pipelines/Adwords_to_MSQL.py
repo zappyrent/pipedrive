@@ -108,5 +108,5 @@ def updatetime():
         print("Connection failed!")
 
 
-WriteToMySQLTable2(data2, 'marketing_adwords_test')
+WriteToMySQLTable2(data2, 'marketing_adwords')
 updatetime()

@@ -1021,13 +1021,13 @@ def updatetime(table_name):
         print("Connection failed!")
 
 
-WriteToMySQLTable(df_deals,'deals_test')
+WriteToMySQLTable(df_deals,'deals')
 updatetime('deals')
 
-WriteToMySQLTable_leads(df_leads,'leads_test')
+WriteToMySQLTable_leads(df_leads,'leads')
 updatetime('leads')
 
-WriteToMySQLTable_person(df_person,'person_test')
+WriteToMySQLTable_person(df_person,'person')
 updatetime('person')
 
 

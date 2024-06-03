@@ -118,7 +118,7 @@ def WriteToMySQLTable(sql_data, tableName):
 
 
 PreserveNULLValues(data)
-WriteToMySQLTable(data, 'marketing_facebook_test')
+WriteToMySQLTable(data, 'marketing_facebook')
 
 def updatetime():
     try:
