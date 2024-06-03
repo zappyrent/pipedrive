@@ -1,7 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-
 import requests
 import pandas as pd
 from pandas import json_normalize
@@ -12,6 +8,14 @@ import mysql.connector
 from oauth2client.service_account import ServiceAccountCredentials
 import json
 from datetime import datetime
+from sqlalchemy import create_engine
+from sqlalchemy.engine import URL
+
+
+#!/usr/bin/env python
+# coding: utf-8
+
+
 
 # # Leads
 # Replace 'YOUR_API_TOKEN' with your Pipedrive API token
@@ -323,7 +327,7 @@ def WriteToMySQLTable(sql_data, tableName):
             host=mc.host,
             database=mc.database)
         sql_drop = " DROP TABLE IF EXISTS {} ".format(tableName)
-        sql_create_table = """CREATE TABLE {}( 
+        sql_create_table = """CREATE TABLE {}(
             deal_id VARCHAR(100),
             org_id VARCHAR(100),
             stage_id VARCHAR(100),
@@ -452,7 +456,7 @@ def WriteToMySQLTable(sql_data, tableName):
             org_id_value VARCHAR(100)
             )""".format(tableName)
 
-        sql_insert_statement = """INSERT INTO {}( 
+        sql_insert_statement = """INSERT INTO {}(
             deal_id,
             org_id,
             stage_id,
@@ -629,7 +633,7 @@ def WriteToMySQLTable_person(sql_data, tableName):
             host=mc.host,
             database=mc.database)
         sql_drop = " DROP TABLE IF EXISTS {} ".format(tableName)
-        sql_create_table = """CREATE TABLE {}( 
+        sql_create_table = """CREATE TABLE {}(
                                     id VARCHAR(100),
                                     company_id VARCHAR(100),
                                     org_id VARCHAR(100),
@@ -725,7 +729,7 @@ def WriteToMySQLTable_person(sql_data, tableName):
                                     picture_id_value VARCHAR(100)
             )""".format(tableName)
 
-        sql_insert_statement = """INSERT INTO {}( 
+        sql_insert_statement = """INSERT INTO {}(
                                     id,
                                     company_id,
                                     org_id,
@@ -859,7 +863,7 @@ def WriteToMySQLTable_leads(sql_data, tableName):
             host=mc.host,
             database=mc.database)
         sql_drop = " DROP TABLE IF EXISTS {} ".format(tableName)
-        sql_create_table = """CREATE TABLE {}( 
+        sql_create_table = """CREATE TABLE {}(
                                     lead_id VARCHAR(100),
                                     title VARCHAR(100),
                                     owner_id VARCHAR(100),
@@ -910,10 +914,10 @@ def WriteToMySQLTable_leads(sql_data, tableName):
                                     Address VARCHAR(100),
                                     Interessato VARCHAR(100),
                                     Aircall_Tags VARCHAR(100),
-                                    Qualified_Ready_nel_passato VARCHAR(100)                                    
+                                    Qualified_Ready_nel_passato VARCHAR(100)
             )""".format(tableName)
 
-        sql_insert_statement = """INSERT INTO {}( 
+        sql_insert_statement = """INSERT INTO {}(
                                     lead_id,
                                     title,
                                     owner_id,
@@ -996,12 +1000,35 @@ def WriteToMySQLTable_leads(sql_data, tableName):
             print("MySQL connection is closed.")
 
 
+def updatetime(table_name):
+    try:
+        connection = mysql.connector.connect(host=mc.host,
+                                             database=mc.database,
+                                             user=mc.user,
+                                             password=mc.password)
 
-WriteToMySQLTable(df_deals,'deals')
+        print("Connected to the database is successful")
 
-WriteToMySQLTable_leads(df_leads,'leads')
+        connurl = URL.create("mysql+mysqlconnector", username=mc.user, password=mc.password, host=mc.host, database=mc.database)
+        engine = create_engine(connurl)
 
-WriteToMySQLTable_person(df_person,'person')
+        df = pd.DataFrame({'tableName': [table_name], 'timestamp': [datetime.now()]})
+        df.to_sql('update_time', con=engine, if_exists='append', index=False)
+        print("Update time inserted successfully")
+
+    except Exception as e:
+        print("Error: ", e)
+        print("Connection failed!")
+
+
+WriteToMySQLTable(df_deals,'deals_test')
+updatetime('deals')
+
+WriteToMySQLTable_leads(df_leads,'leads_test')
+updatetime('leads')
+
+WriteToMySQLTable_person(df_person,'person_test')
+updatetime('person')
 
 
 

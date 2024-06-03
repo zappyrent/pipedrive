@@ -8,6 +8,11 @@ import mysql.connector
 from oauth2client.service_account import ServiceAccountCredentials
 import os
 
+import pandas as pd
+from datetime import datetime
+import mysql.connector
+from sqlalchemy import create_engine
+from sqlalchemy.engine import URL
 
 creds_directory = '/home/elkin/etl/pipedrive/pipelines/GoogleSheetsToMySQL.json'
 
@@ -61,7 +66,7 @@ def WriteToMySQLTable(sql_data, tableName):
 # This command will drop the table, and we could just have the table name hardcoded into the string, but instead I am using the name of the table passed into the method. {} is a placeholder for what we want to pass into this string, and using .format(blah) we can pass the string name from the variable passed into the method here.
         sql_drop = " DROP TABLE IF EXISTS {} ".format(tableName)
 # Now we will create the table, and the triple quotes are used so that when we go to the next line of code, we remain in a string. Otherwise it will terminate the string at the end of the line, and we want ALL of this to be one giant string. When injecting data into VALUES, we use the placeholder %s for each column of data we have.
-        sql_create_table = """CREATE TABLE {}( 
+        sql_create_table = """CREATE TABLE {}(
             Day DATE,
             Campaign_Name VARCHAR(100),
             Adset_Name VARCHAR(100),
@@ -71,8 +76,8 @@ def WriteToMySQLTable(sql_data, tableName):
             Link_Clicks VARCHAR(100),
             Amount_Spent VARCHAR(100)
             )""".format(tableName)
- 
-        sql_insert_statement = """INSERT INTO {}( 
+
+        sql_insert_statement = """INSERT INTO {}(
             Day,
             Campaign_Name,
             Adset_Name,
@@ -113,11 +118,26 @@ def WriteToMySQLTable(sql_data, tableName):
 
 
 PreserveNULLValues(data)
-WriteToMySQLTable(data, 'marketing_facebook')
+WriteToMySQLTable(data, 'marketing_facebook_test')
 
+def updatetime():
+    try:
+        connection = mysql.connector.connect(host=mc.host,
+                                             database=mc.database,
+                                             user=mc.user,
+                                             password=mc.password)
 
+        print("Connected to the database is successful")
 
+        connurl = URL.create("mysql+mysqlconnector", username=mc.user, password=mc.password, host=mc.host, database=mc.database)
+        engine = create_engine(connurl)
 
+        df = pd.DataFrame({'tableName': ['facebook'], 'timestamp': [datetime.now()]})
+        df.to_sql('update_time', con=engine, if_exists='append', index=False)
+        print("Update time inserted successfully")
 
+    except Exception as e:
+        print("Error: ", e)
+        print("Connection failed!")
 
-
+updatetime()

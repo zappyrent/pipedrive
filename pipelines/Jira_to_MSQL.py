@@ -7,6 +7,10 @@ import mysqlcredentials as mc
 import mysql.connector
 from oauth2client.service_account import ServiceAccountCredentials
 
+import pandas as pd
+from datetime import datetime
+from sqlalchemy import create_engine
+from sqlalchemy.engine import URL
 
 
 creds_directory = '/home/elkin/etl/pipedrive/pipelines/GoogleSheetsToMySQL.json'
@@ -64,7 +68,7 @@ def WriteToMySQLTable_jira(sql_data, tableName):
             database=mc.database
         )
         sql_drop = " DROP TABLE IF EXISTS {} ".format(tableName)
-        sql_create_table = """CREATE TABLE {}( 
+        sql_create_table = """CREATE TABLE {}(
             Issue_type VARCHAR(100),
             Key_column VARCHAR(100),
             Summary VARCHAR(500),
@@ -88,7 +92,7 @@ def WriteToMySQLTable_jira(sql_data, tableName):
             Story_points_estimation VARCHAR(100)
             )""".format(tableName)
 
-        sql_insert_statement = """INSERT INTO {}( 
+        sql_insert_statement = """INSERT INTO {}(
             Issue_type,
             Key_column,
             Summary,
@@ -142,5 +146,28 @@ def WriteToMySQLTable_jira(sql_data, tableName):
 
 
 PreserveNULLValues(data_jira)
-WriteToMySQLTable_jira(data_jira, 'jira')
+WriteToMySQLTable_jira(data_jira, 'jira_test')
 
+
+def updatetime():
+    try:
+        connection = mysql.connector.connect(host=mc.host,
+                                             database=mc.database,
+                                             user=mc.user,
+                                             password=mc.password)
+
+        print("Connected to the database is successful")
+
+        connurl = URL.create("mysql+mysqlconnector", username=mc.user, password=mc.password, host=mc.host, database=mc.database)
+        engine = create_engine(connurl)
+
+        df = pd.DataFrame({'tableName': ['jira'], 'timestamp': [datetime.now()]})
+        df.to_sql('update_time', con=engine, if_exists='append', index=False)
+        print("Update time inserted successfully")
+
+    except Exception as e:
+        print("Error: ", e)
+        print("Connection failed!")
+
+
+updatetime()
