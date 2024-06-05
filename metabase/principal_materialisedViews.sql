@@ -46,8 +46,7 @@ WITH leads_cte AS (
                 else 'Other'
                 END as CHAR) as cancelled_reason,
            person.next_activity_date as person_next_activity_date,
-           '' as stage_id,
-           '' as deals_next_avitivty_date
+           '' as stage_id
     FROM leads leads
         LEFT JOIN person person ON cast(leads.person_id as decimal(10,0)) = person.id
 ),
@@ -95,8 +94,7 @@ deals_cte AS (
                 else 'Other'
                 END as CHAR) as cancelled_reason,
            person.next_activity_date as person_next_activity_date,
-           deals.stage_id as stage_id,
-           deals.next_activity_date as deals_next_avitivty_date
+           deals.stage_id as stage_id
     FROM deals deals
         LEFT JOIN person person ON deals.person_id_value = person.id
 )
