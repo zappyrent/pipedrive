@@ -114,6 +114,34 @@ SELECT * FROM deals_cte;
 DROP VIEW leads_deals_person;
 
 
+-- Create View
+CREATE VIEW aircalls_view AS
+    SELECT
+        aircalls_calls_dag.id,
+        aircalls_calls_dag.direction,
+        aircalls_calls_dag.status,
+        aircalls_calls_dag.missed_call_reason,
+        aircalls_calls_dag.started_at,
+        aircalls_calls_dag.answered_at,
+        aircalls_calls_dag.ended_at,
+        aircalls_calls_dag.duration,
+        aircalls_calls_dag.raw_digits,
+        aircalls_calls_dag.user_id,
+        aircalls_calls_dag.archived,
+        aircalls_calls_dag.assigned_to,
+        aircalls_calls_dag.transferred_by,
+        aircalls_calls_dag.transferred_to,
+        aircalls_calls_dag.number_id,
+        aircalls_calls_dag.cost,
+        aircalls_calls_dag.country_code_a2,
+        aircalls_calls_dag.pricing_type,
+        aircalls_users_dag.name as user_name
+    FROM aircalls_calls_dag
+        LEFT JOIN  aircalls_users_dag ON aircalls_calls_dag.user_id = aircalls_users_dag.id
+
+
+
+
 -- The following table is for all the "Buyer persona", full overview dashbaords in metabase. Everything that joins pipedrive and ade production
 -- As this contains more data was needed to be created a TABLLE instead of view. Which to be updated need to be dropped and created again.
 
