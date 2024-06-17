@@ -1,13 +1,11 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-
 import gspread
 import mysqlcredentials as mc
 import mysql.connector
 from oauth2client.service_account import ServiceAccountCredentials
 import os
-
 import pandas as pd
 from datetime import datetime
 import mysql.connector
@@ -71,7 +69,6 @@ def WriteToMySQLTable(sql_data, tableName):
             Campaign_Name VARCHAR(100),
             Adset_Name VARCHAR(100),
             Ad_Name VARCHAR(100),
-            Landing_page VARCHAR(100),
             Impressions VARCHAR(100),
             Link_Clicks VARCHAR(100),
             Amount_Spent VARCHAR(100)
@@ -82,11 +79,10 @@ def WriteToMySQLTable(sql_data, tableName):
             Campaign_Name,
             Adset_Name,
             Ad_Name,
-            Landing_page,
             Impressions,
             Link_Clicks,
             Amount_Spent)
-        VALUES ( %s,%s,%s,%s,%s,%s,%s,%s )""".format(tableName)
+        VALUES (%s,%s,%s,%s,%s,%s,%s )""".format(tableName)
 # Here we create a cursor, which we will use to execute the MySQL statements above. After each statement is executed, a message will be printed to the console if the execution was successful.
         cursor = connection.cursor()
         cursor.execute(sql_drop)
