@@ -67,22 +67,25 @@ def WriteToMySQLTable(sql_data, tableName):
         sql_create_table = """CREATE TABLE {}(
             Day DATE,
             Campaign_Name VARCHAR(100),
-            Adset_Name VARCHAR(100),
-            Ad_Name VARCHAR(100),
             Impressions VARCHAR(100),
             Link_Clicks VARCHAR(100),
-            Amount_Spent VARCHAR(100)
+            Amount_Spent VARCHAR(100),
+            Adset_Name VARCHAR(100),
+            Ad_Name VARCHAR(100),
+            Month VARCHAR(100)
             )""".format(tableName)
 
         sql_insert_statement = """INSERT INTO {}(
             Day,
             Campaign_Name,
-            Adset_Name,
-            Ad_Name,
             Impressions,
             Link_Clicks,
-            Amount_Spent)
-        VALUES (%s,%s,%s,%s,%s,%s,%s )""".format(tableName)
+            Amount_Spent,
+            Adset_Name,
+            Ad_Name,
+            Month
+            )
+        VALUES (%s,%s,%s,%s,%s,%s,%s,%s )""".format(tableName)
 # Here we create a cursor, which we will use to execute the MySQL statements above. After each statement is executed, a message will be printed to the console if the execution was successful.
         cursor = connection.cursor()
         cursor.execute(sql_drop)
