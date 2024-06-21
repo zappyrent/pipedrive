@@ -27,7 +27,7 @@ data2 = GetSpreadsheetData('db_adwords', 1)
 print(data2[0])
 print(len(data2))
 
-data3 = GetSpreadsheetData('db_adwords', 4)
+data3 = GetSpreadsheetData('db_adwords', 3)
 print(data3[0])
 print(len(data3))
 
