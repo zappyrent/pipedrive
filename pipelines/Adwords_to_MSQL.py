@@ -26,6 +26,8 @@ data  = GetSpreadsheetData('db_adwords', 4)
 
 print(data2[0])
 print(len(data2))
+print(data[0])
+print(len(data))
 
 # define method to write list of data to MySQL table
 def WriteToMySQLTable2(sql_data, tableName):
