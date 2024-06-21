@@ -21,12 +21,13 @@ def GetSpreadsheetData(sheetName, worksheetIndex):
     sheet = client.open(sheetName).get_worksheet(worksheetIndex)
     return sheet.get_all_values()[1:]
 
-data3 = GetSpreadsheetData('db_adwords', 4)
-data2 = GetSpreadsheetData('db_adwords', 1)
 
+data2 = GetSpreadsheetData('db_adwords', 1)
 
 print(data2[0])
 print(len(data2))
+
+data3 = GetSpreadsheetData('db_adwords', 4)
 print(data3[0])
 print(len(data3))
 
