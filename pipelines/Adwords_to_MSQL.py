@@ -21,14 +21,14 @@ def GetSpreadsheetData(sheetName, worksheetIndex):
     sheet = client.open(sheetName).get_worksheet(worksheetIndex)
     return sheet.get_all_values()[1:]
 
-data = GetSpreadsheetData('db_adwords', 4)
+data3 = GetSpreadsheetData('db_adwords', 4)
 data2 = GetSpreadsheetData('db_adwords', 1)
 
 
 print(data2[0])
 print(len(data2))
-print(data[0])
-print(len(data))
+print(data3[0])
+print(len(data3))
 
 # define method to write list of data to MySQL table
 def WriteToMySQLTable2(sql_data, tableName):
@@ -112,5 +112,5 @@ def updatetime():
 
 
 WriteToMySQLTable2(data2, 'marketing_adwords')
-WriteToMySQLTable2(data, 'marketing_adwords_non_search')
+WriteToMySQLTable2(data3, 'marketing_adwords_non_search')
 updatetime()
