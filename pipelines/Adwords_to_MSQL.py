@@ -21,11 +21,11 @@ def GetSpreadsheetData(sheetName, worksheetIndex):
     sheet = client.open(sheetName).get_worksheet(worksheetIndex)
     return sheet.get_all_values()[1:]
 
-data2=GetSpreadsheetData('db_adwords', 1)
+data2 = GetSpreadsheetData('db_adwords', 1)
+data  = GetSpreadsheetData('db_adwords_non_search', 4)
 
 print(data2[0])
 print(len(data2))
-
 
 # define method to write list of data to MySQL table
 def WriteToMySQLTable2(sql_data, tableName):
@@ -59,7 +59,7 @@ def WriteToMySQLTable2(sql_data, tableName):
             Impressions,
             Clicks,
             Campaign_metabase)
-        VALUES ( %s,%s,%s,%s,%s,%s,%s)""".format(tableName)
+        VALUES (%s,%s,%s,%s,%s,%s,%s)""".format(tableName)
         # Here we create a cursor, which we will use to execute the MySQL statements above. After each statement is executed, a message will be printed to the console if the execution was successful.
         cursor = connection.cursor()
         cursor.execute(sql_drop)
@@ -109,4 +109,5 @@ def updatetime():
 
 
 WriteToMySQLTable2(data2, 'marketing_adwords')
+WriteToMySQLTable2(data, 'marketing_adwords_non_search')
 updatetime()
