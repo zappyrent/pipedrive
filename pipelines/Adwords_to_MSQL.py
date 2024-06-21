@@ -22,7 +22,7 @@ def GetSpreadsheetData(sheetName, worksheetIndex):
     return sheet.get_all_values()[1:]
 
 data2 = GetSpreadsheetData('db_adwords', 1)
-data  = GetSpreadsheetData('db_adwords_non_search', 4)
+data  = GetSpreadsheetData('db_adwords', 4)
 
 print(data2[0])
 print(len(data2))
