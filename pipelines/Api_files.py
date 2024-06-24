@@ -663,7 +663,7 @@ def WriteToMySQLTable_person(sql_data, tableName):
                                     first_char VARCHAR(100),
                                     update_time DATE,
                                     delete_time VARCHAR(100),
-                                    add_time DATE,
+                                    add_time DATETIME,
                                     visible_to VARCHAR(100),
                                     picture_id VARCHAR(100),
                                     next_activity_date DATE,
