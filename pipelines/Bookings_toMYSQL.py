@@ -1259,73 +1259,73 @@ def WriteToMySQLTable_booking_attachments(sql_data, tableName):
             print("MySQL connection is closed.")
 
 
-WriteToMySQLTable_bookings(data_bookings, 'bookings_test')
+WriteToMySQLTable_bookings(data_bookings, 'bookings')
 
 
 
 
 
-WriteToMySQLTable_booking_details(data_booking_details, 'booking_details_test')
+WriteToMySQLTable_booking_details(data_booking_details, 'booking_details')
 
 
 
 
 
-WriteToMySQLTable_booking_properties(data_booking_properties, 'booking_properties_test')
+WriteToMySQLTable_booking_properties(data_booking_properties, 'booking_properties')
 
 
 
 
 
-WriteToMySQLTable_lead_properties(data_lead_properties, 'lead_properties_test')
+WriteToMySQLTable_lead_properties(data_lead_properties, 'lead_properties')
 
 
 
 
 
-WriteToMySQLTable_visits(data_visits, 'visits_test')
+WriteToMySQLTable_visits(data_visits, 'visits')
 
 
 
 
 
-WriteToMySQLTable_client_account_managers(data_client_account_managers, 'client_account_managers_test')
+WriteToMySQLTable_client_account_managers(data_client_account_managers, 'client_account_managers')
 
 
 
 
 
-WriteToMySQLTable_account_managers(data_account_managers, 'account_managers_test')
+WriteToMySQLTable_account_managers(data_account_managers, 'account_managers')
 
 
 
 
 
-WriteToMySQLTable_properties_next_available_slots(data_properties_next_available_slots, 'properties_next_available_slots_test')
+WriteToMySQLTable_properties_next_available_slots(data_properties_next_available_slots, 'properties_next_available_slots')
 
 
 
 
 
-WriteToMySQLTable_listing_highlight(data_listing_highlight, 'listing_highlight_test')
+WriteToMySQLTable_listing_highlight(data_listing_highlight, 'listing_highlight')
 
 
 
 
 
-WriteToMySQLTable_events(data_events, 'events_test')
+WriteToMySQLTable_events(data_events, 'events')
 
 
 
 
 
-WriteToMySQLTable_properties(data_properties, 'properties_test')
+WriteToMySQLTable_properties(data_properties, 'properties')
 
 
 
 
 
-WriteToMySQLTable_booking_attachments(data_booking_attachments, 'booking_attachments_test')
+WriteToMySQLTable_booking_attachments(data_booking_attachments, 'booking_attachments')
 
 def updatetime():
     try:
